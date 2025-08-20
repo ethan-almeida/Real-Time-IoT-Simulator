@@ -1,0 +1,61 @@
+# .gitignore for C / embedded IoT project
+
+# Build directories
+/build/
+/bin/
+/out/
+/dist/
+/target/
+/Debug/
+/Release/
+
+# Compiled object and binary files
+*.o
+*.obj
+*.lo
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+*.out
+a.out
+*.elf
+*.hex
+*.bin
+*.map
+
+# Dependency and coverage files
+*.d
+*.gcda
+*.gcno
+*.lcov
+coverage/
+
+# CMake and Make artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build-*/
+
+# Temp and editor files
+*~
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# IDE/workspace
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and cores
+*.log
+core
+core.*
