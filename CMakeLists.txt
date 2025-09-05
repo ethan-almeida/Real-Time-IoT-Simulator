@@ -37,6 +37,7 @@ set(FREERTOS_PORT_DIR ${FREERTOS_SOURCE_DIR}/portable/ThirdParty/GCC/Posix)
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/include
     ${FREERTOS_INCLUDE_DIR}
     ${FREERTOS_PORT_DIR}
     ${FREERTOS_PORT_DIR}/utils
@@ -58,37 +59,38 @@ set(FREERTOS_SOURCES
 # Application sources
 set(APP_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/sensors.c
 )
 
-# Create executable
+
 add_executable(iot_gateway_sim ${APP_SOURCES} ${FREERTOS_SOURCES})
 
-# Link libraries
+
 target_link_libraries(iot_gateway_sim pthread)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(iot_gateway_sim rt)
 endif()
 
-# Add math library for floating point operations
+
 target_link_libraries(iot_gateway_sim m)
 
-# Installation
+
 install(TARGETS iot_gateway_sim DESTINATION bin)
 
-# Add custom target for running the simulator
+
 add_custom_target(run
     COMMAND ${CMAKE_CURRENT_BINARY_DIR}/iot_gateway_sim
     DEPENDS iot_gateway_sim
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-# Print build configuration
+
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "C Compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "C Flags: ${CMAKE_C_FLAGS}")
 
-# Debug the include paths
+
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 message(STATUS "=== Include Directories ===")
 foreach(dir ${dirs})
