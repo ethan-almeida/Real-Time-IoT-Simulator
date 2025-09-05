@@ -1,0 +1,96 @@
+cmake_minimum_required(VERSION 3.10)
+project(IoTGatewaySimulator C)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Build type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# Compiler flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0 -DDEBUG")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -DNDEBUG")
+
+# Platform detection
+if(UNIX AND NOT APPLE)
+    set(PLATFORM_NAME "Linux")
+    add_definitions(-DPLATFORM_LINUX)
+elseif(APPLE)
+    set(PLATFORM_NAME "macOS")
+    add_definitions(-DPLATFORM_MACOS)
+elseif(WIN32)
+    set(PLATFORM_NAME "Windows")
+    add_definitions(-DPLATFORM_WINDOWS)
+endif()
+
+message(STATUS "Building for ${PLATFORM_NAME}")
+
+# Library paths
+set(FREERTOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/freertos)
+set(FREERTOS_SOURCE_DIR ${FREERTOS_DIR}/Source)
+set(FREERTOS_INCLUDE_DIR ${FREERTOS_SOURCE_DIR}/include)
+set(FREERTOS_PORT_DIR ${FREERTOS_SOURCE_DIR}/portable/ThirdParty/GCC/Posix)
+
+# Include directories
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${FREERTOS_INCLUDE_DIR}
+    ${FREERTOS_PORT_DIR}
+    ${FREERTOS_PORT_DIR}/utils
+)
+
+# FreeRTOS sources
+set(FREERTOS_SOURCES
+    ${FREERTOS_SOURCE_DIR}/tasks.c
+    ${FREERTOS_SOURCE_DIR}/queue.c
+    ${FREERTOS_SOURCE_DIR}/list.c
+    ${FREERTOS_SOURCE_DIR}/timers.c
+    ${FREERTOS_SOURCE_DIR}/event_groups.c
+    ${FREERTOS_SOURCE_DIR}/stream_buffer.c
+    ${FREERTOS_SOURCE_DIR}/heap_1.c
+    ${FREERTOS_PORT_DIR}/port.c
+    ${FREERTOS_PORT_DIR}/utils/wait_for_event.c
+)
+
+# Application sources
+set(APP_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+)
+
+# Create executable
+add_executable(iot_gateway_sim ${APP_SOURCES} ${FREERTOS_SOURCES})
+
+# Link libraries
+target_link_libraries(iot_gateway_sim pthread)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(iot_gateway_sim rt)
+endif()
+
+# Add math library for floating point operations
+target_link_libraries(iot_gateway_sim m)
+
+# Installation
+install(TARGETS iot_gateway_sim DESTINATION bin)
+
+# Add custom target for running the simulator
+add_custom_target(run
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/iot_gateway_sim
+    DEPENDS iot_gateway_sim
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+# Print build configuration
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "C Compiler: ${CMAKE_C_COMPILER}")
+message(STATUS "C Flags: ${CMAKE_C_FLAGS}")
+
+# Debug the include paths
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+message(STATUS "=== Include Directories ===")
+foreach(dir ${dirs})
+  message(STATUS "Include dir: ${dir}")
+endforeach()
