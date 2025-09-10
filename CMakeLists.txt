@@ -60,6 +60,8 @@ set(FREERTOS_SOURCES
 set(APP_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/sensors.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/network.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/security.c
 )
 
 
