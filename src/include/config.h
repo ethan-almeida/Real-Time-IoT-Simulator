@@ -4,10 +4,10 @@
 #define SYS_NAME "Embedded Gateway"
 
 #define SENSOR_TASK_STACK_SIZE      (2048)
-#define PROCESSOR_TASK_STACK_SIZE   (4096)
-#define NETWORK_TASK_STACK_SIZE     (8192)
-#define SECURITY_TASK_STACK_SIZE    (4096)
-#define MONITOR_TASK_STACK_SIZE     (2048)
+#define PROCESSOR_TASK_STACK_SIZE   (2048)
+#define NETWORK_TASK_STACK_SIZE     (1024)
+#define SECURITY_TASK_STACK_SIZE    (2048)
+#define MONITOR_TASK_STACK_SIZE     (1024)
 
 /* Queue Sizes */
 #define SENSOR_QUEUE_LENGTH         (10)
@@ -16,8 +16,8 @@
 
 /* Network Configuration */
 #define MQTT_BROKER_ADDRESS         "test.mosquitto.org"
-#define MQTT_BROKER_PORT            8883
-#define MQTT_CLIENT_ID              "iot_gateway_sim_001"
+#define MQTT_BROKER_PORT            1883
+#define MQTT_CLIENT_ID              "stick_gateway"
 #define MQTT_TOPIC_BASE             "iot/gateway/"
 
 /* Sensor Configuration */
