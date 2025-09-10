@@ -8,8 +8,12 @@
 #include "queue.h"
 #include "semphr.h"
 #include "event_groups.h"
+#define EVENT_NETWORK_CONNECTED     (1 << 0)
+#define EVENT_TLS_READY            (1 << 1)
+#define EVENT_MQTT_CONNECTED       (1 << 2)
+#define EVENT_DATA_READY           (1 << 3)
+#define EVENT_SHUTDOWN             (1 << 4)
 
-/* Sensor Data Types */
 typedef enum {
     SENSOR_TYPE_TEMPERATURE,
     SENSOR_TYPE_HUMIDITY,
@@ -29,22 +33,12 @@ typedef struct {
     uint8_t priority;
 } message_t;
 
-/* Event Flags */
-#define EVENT_NETWORK_CONNECTED     (1 << 0)
-#define EVENT_TLS_READY            (1 << 1)
-#define EVENT_MQTT_CONNECTED       (1 << 2)
-#define EVENT_DATA_READY           (1 << 3)
-#define EVENT_SHUTDOWN             (1 << 4)
-
-/* Global Handles */
 extern QueueHandle_t xSensorQueue;
-// extern QueueHandle_t xNetworkQueue;  // Disabled for now
-// extern SemaphoreHandle_t xNetworkMutex;  // Disabled for now
+extern QueueHandle_t xNetworkQueue;  
+extern SemaphoreHandle_t xNetworkMutex;  
 extern SemaphoreHandle_t xConsoleMutex;
 extern EventGroupHandle_t xSystemEvents;
-
-/* Utility Functions */
 void safe_printf(const char *format, ...);
 uint32_t get_system_time_ms(void);
 
-#endif /* COMMON_H */
+#endif 
