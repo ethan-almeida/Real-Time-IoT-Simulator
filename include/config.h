@@ -12,8 +12,8 @@
 #define NETWORK_QUEUE_LENGTH        (5)
 #define MAX_MESSAGE_SIZE            (256)
 #define MQTT_BROKER_ADDRESS         "test.mosquitto.org"
-#define MQTT_BROKER_PORT            8883
-#define MQTT_CLIENT_ID              "iot_gateway_sim_001"
+#define MQTT_BROKER_PORT            1883
+#define MQTT_CLIENT_ID              "stick_gateway"
 #define MQTT_TOPIC_BASE             "iot/gateway/"
 #define NUM_TEMP_SENSORS            3
 #define NUM_HUMIDITY_SENSORS        2
