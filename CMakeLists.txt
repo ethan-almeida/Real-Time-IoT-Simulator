@@ -34,6 +34,9 @@ set(FREERTOS_SOURCE_DIR ${FREERTOS_DIR}/Source)
 set(FREERTOS_INCLUDE_DIR ${FREERTOS_SOURCE_DIR}/include)
 set(FREERTOS_PORT_DIR ${FREERTOS_SOURCE_DIR}/portable/ThirdParty/GCC/Posix)
 
+set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/mbedTLS)
+set(MBEDTLS_INCLUDE_DIR ${MBEDTLS_DIR}/include)
+
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -41,7 +44,16 @@ include_directories(
     ${FREERTOS_INCLUDE_DIR}
     ${FREERTOS_PORT_DIR}
     ${FREERTOS_PORT_DIR}/utils
+    ${MBEDTLS_INCLUDE_DIR}
 )
+
+add_definitions(-DLWIP_NO_STDINT_H=1 -DLWIP_NO_STDIO_H=1)
+
+set_source_files_properties(${LWIP_SOURCES} PROPERTIES COMPILE_FLAGS "-I${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+set(ENABLE_TESTING OFF)
+set(ENABLE_PROGRAMS OFF)
+add_subdirectory(${MBEDTLS_DIR} EXCLUDE_FROM_ALL)
 
 # FreeRTOS sources
 set(FREERTOS_SOURCES
@@ -62,13 +74,13 @@ set(APP_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/sensors.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/network.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/security.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sys_arch.c
 )
 
 
-add_executable(iot_gateway_sim ${APP_SOURCES} ${FREERTOS_SOURCES})
+add_executable(iot_gateway_sim ${APP_SOURCES} ${FREERTOS_SOURCES} ${LWIP_SOURCES})
 
-
-target_link_libraries(iot_gateway_sim pthread)
+target_link_libraries(iot_gateway_sim pthread mbedtls mbedx509 mbedcrypto)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(iot_gateway_sim rt)
